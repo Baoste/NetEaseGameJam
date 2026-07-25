@@ -7,17 +7,15 @@ public class FloorGroupSpawner : MonoBehaviour
 {
     [Header("Floor")]
     [SerializeField] private GameObject floorGroupPrefab;
-    [SerializeField] private List<GameObject> floorGroupInstances = new();
+    [SerializeField] private List<FloorGroupInfo> floorGroupInfos;
+    
+    private List<GameObject> floorGroupInstances = new();
 
     [Header("Layout")]
-    [SerializeField, Min(1)] private int generateCount = 5;
-
     // Floor 本身的尺寸
     [SerializeField] private Vector2 floorSize = new Vector2(1f, 1f);
-
     // Floor 之间的额外间隔
     [SerializeField] private Vector2 floorSpacing = new Vector2(0.1f, 0.1f);
-
     [SerializeField] private Vector3 floorEuler;
 
     [Header("Zone")]
@@ -30,28 +28,10 @@ public class FloorGroupSpawner : MonoBehaviour
 
     private void Start()
     {
-        GenerateFloorGroup(
-            new string[] { 
-                "xoo", "oox",
-                "ooo", "",
-            },
-            2
-        );
-
-        GenerateFloorGroup(
-            new string[] {
-                "oxo", "oox",
-                "xoo",    "",
-            },
-            2
-        );
-
-        GenerateFloorGroup(
-            new string[] {
-                "oxo", "xoo", "oxo",
-            },
-            3
-        );
+        foreach (FloorGroupInfo info in floorGroupInfos)
+        {
+            GenerateFloorGroup(info.beatInfo, info.columnCount);
+        }
     }
 
     public void GenerateFloorGroup(string[] beatInfo, int columnCount, float duration = 0.5f)
@@ -83,7 +63,7 @@ public class FloorGroupSpawner : MonoBehaviour
         if (floorGroupInstances.Count == 0)
             yield break;
 
-        int columns = Mathf.Max(1, generateCount);
+        int columns = Mathf.Max(1, floorGroupInfos.Count);
         int rows = Mathf.CeilToInt((float)floorGroupInstances.Count / columns);
 
         // 每两个 Floor 中心之间的距离
@@ -207,7 +187,7 @@ public class FloorGroupSpawner : MonoBehaviour
             return;
         }
 
-        int columns = Mathf.Max(1, generateCount);
+        int columns = Mathf.Max(1, floorGroupInfos.Count);
         int rows = Mathf.CeilToInt(
             (float)floorGroupInstances.Count / columns
         );

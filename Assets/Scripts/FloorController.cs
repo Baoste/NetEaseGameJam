@@ -12,6 +12,36 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     private Renderer rend;
     private MaterialPropertyBlock propBlock;
 
+    private int sortIndex;
+    public const int SORTLAYER = 1000;
+
+    public int CurrentBeatIndex => currentBeatIndex;
+
+    public char GetNextBeatInfo()
+    {
+        if (string.IsNullOrEmpty(beatInfo))
+            return 'o';
+
+        int nextIndex =
+            currentBeatIndex % beatInfo.Length;
+        return beatInfo[nextIndex];
+    }
+
+    public float GetCellSize()
+    {
+        FloorGroup floorGroup =
+            GetComponentInParent<FloorGroup>();
+        return floorGroup != null
+            ? floorGroup.CellSize
+            : 2f;
+    }
+
+    public void BeatReset()
+    {
+        currentBeatIndex = 0;
+        char currentBeatChar = beatInfo[currentBeatIndex];
+        SetFloorStatus(currentBeatChar);
+    }
 
     public void OnBeatUpdate()
     {
@@ -19,10 +49,15 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         currentBeatIndex = (currentBeatIndex + 1) % beatInfo.Length;
 
         transform.DOPunchPosition(
-            new Vector3(0, 0.1f, 0), 0.2f, 
+            new Vector3(0, 0.1f, 0), 0.2f,
             vibrato: 1, elasticity: 0.5f
         );
 
+        SetFloorStatus(currentBeatChar);
+    }
+
+    private void SetFloorStatus(char currentBeatChar)
+    {
         // Change the floor status based on the current beat info
         switch (currentBeatChar)
         {
@@ -44,7 +79,8 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     private void Awake()
     {
-        BeatSystem.beatUpdateObjects.Add(this);
+        sortIndex = SORTLAYER + BeatSystem.beatUpdateObjects.Count;
+        BeatSystem.beatUpdateObjects[sortIndex] = this;
         rend = GetComponent<Renderer>();
         propBlock = new MaterialPropertyBlock();
     }
@@ -55,7 +91,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     private void OnDestroy()
     {
-        BeatSystem.beatUpdateObjects.Remove(this);
+        BeatSystem.beatUpdateObjects.Remove(sortIndex);
     }
 
     void Update()

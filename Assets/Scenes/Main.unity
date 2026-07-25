@@ -399,8 +399,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6014361, y: 0.004072122, z: -0.0030655363, w: -0.7989047}
-  m_LocalPosition: {x: 3.774072, y: 18.552015, z: -11.709889}
+  m_LocalRotation: {x: -0.6355764, y: -0.008801929, z: 0.007247062, w: -0.77195376}
+  m_LocalPosition: {x: 4.6946473, y: 20.321121, z: -13.867061}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1639,9 +1639,26 @@ MonoBehaviour:
   floorGroupPrefab: {fileID: 5014960427946577089, guid: f3c9bf0c781579442a2b7e615482aa21,
     type: 3}
   floorGroupInstances: []
-  generateCount: 3
+  floorGroupInfos:
+  - beatInfo:
+    - xoo
+    - oox
+    - ooo
+    - 
+    columnCount: 2
+  - beatInfo:
+    - oxo
+    - oox
+    - xoo
+    - 
+    columnCount: 2
+  - beatInfo:
+    - oox
+    - xoo
+    - oox
+    columnCount: 3
   floorSize: {x: 1, y: 1}
-  floorSpacing: {x: 5, y: 1}
+  floorSpacing: {x: 6, y: 6}
   floorEuler: {x: 0, y: 0, z: 0}
   zoneWidth: 28.9
   zoneHeight: 5.81
@@ -1763,7 +1780,7 @@ Transform:
   m_GameObject: {fileID: 1406436112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 1.51, z: 0}
+  m_LocalPosition: {x: 0, y: 1.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1781,6 +1798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d69dd2edcb5a97a49a117be1f5d4c39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floorSearchTolerance: 0.05
 --- !u!1001 &1592690680
 PrefabInstance:
   m_ObjectHideFlags: 0

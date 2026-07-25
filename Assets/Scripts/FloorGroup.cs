@@ -12,6 +12,8 @@ public class FloorGroup : MonoBehaviour
     [Tooltip("统一控制 Floor 的 X/Z 尺寸、组内排列间距和拖拽吸附网格。")]
     [SerializeField, Min(0.01f)] private float cellSize = 2f;
 
+    public float CellSize => cellSize;
+
     public Transform FirstFloor =>
         floorInstances.Count > 0 && floorInstances[0] != null
             ? floorInstances[0].transform
