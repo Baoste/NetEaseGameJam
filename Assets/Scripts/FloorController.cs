@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class FloorController : MonoBehaviour, IBeatUpdate
 {
-    [SerializeField] private List<BeatInfo> m_BeatInfo;
+    public string beatInfo;
     private int currentBeatIndex = 0;
-    private int currentBeatCount = 0;
 
     [Header("Component")]
     private Renderer rend;
@@ -16,11 +15,8 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     public void OnBeatUpdate()
     {
-        if (currentBeatCount ++ >= m_BeatInfo[currentBeatIndex].beatCount)
-        {
-            currentBeatIndex = (currentBeatIndex + 1) % m_BeatInfo.Count;
-            currentBeatCount = 0;
-        }
+        char currentBeatChar = beatInfo[currentBeatIndex];
+        currentBeatIndex = (currentBeatIndex + 1) % beatInfo.Length;
 
         transform.DOPunchPosition(
             new Vector3(0, 0.1f, 0), 0.2f, 
@@ -28,25 +24,20 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         );
 
         // Change the floor status based on the current beat info
-        switch (m_BeatInfo[currentBeatIndex].status)
+        switch (currentBeatChar)
         {
-            case 0:
+            case 'o':
+                rend.GetPropertyBlock(propBlock);
+                propBlock.SetColor("_BaseColor", Color.white);
+                rend.SetPropertyBlock(propBlock);
+                break;
+            case 'x':
                 rend.GetPropertyBlock(propBlock);
                 propBlock.SetColor("_BaseColor", Color.black);
                 rend.SetPropertyBlock(propBlock);
                 break;
-            case 1:
-                rend.GetPropertyBlock(propBlock);
-                propBlock.SetColor("_BaseColor", Color.red);
-                rend.SetPropertyBlock(propBlock);
-                break;
-            case 2:
-                rend.GetPropertyBlock(propBlock);
-                propBlock.SetColor("_BaseColor", Color.green);
-                rend.SetPropertyBlock(propBlock);
-                break;
             default:
-                Debug.LogWarning("Unknown floor status: " + m_BeatInfo[currentBeatIndex].status);
+                Debug.LogWarning("Unknown floor status: " + currentBeatChar);
                 break;
         }
     }
@@ -54,12 +45,17 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     private void Awake()
     {
         BeatSystem.beatUpdateObjects.Add(this);
+        rend = GetComponent<Renderer>();
+        propBlock = new MaterialPropertyBlock();
     }
 
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        propBlock = new MaterialPropertyBlock();
+    }
+
+    private void OnDestroy()
+    {
+        BeatSystem.beatUpdateObjects.Remove(this);
     }
 
     void Update()

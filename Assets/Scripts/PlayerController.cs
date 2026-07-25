@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IBeatUpdate
 {
-    private Vector2 moveDirection;
+    private Vector2 moveDirection = Vector2.right;
 
     public void OnBeatUpdate()
     {
-        transform.position += new Vector3(moveDirection.x, 0, moveDirection.y);
+        transform.position += 2 * new Vector3(moveDirection.x, 0, moveDirection.y);
     }
 
 
