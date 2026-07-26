@@ -8,7 +8,7 @@ public class BeatSystem : MonoBehaviour
 {
     [SerializeField] private float beatTimeValue;
 
-    public static bool isStop = false;
+    public static bool isStop = true;
     public static float beatTime { get; private set; }
     public static SortedDictionary<int, IBeatUpdate> beatUpdateObjects = new();
 

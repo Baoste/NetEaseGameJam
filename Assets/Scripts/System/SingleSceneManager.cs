@@ -27,8 +27,12 @@ public class SingleSceneManager : MonoBehaviour
         if (glitchController == null)
             glitchController = FindAnyObjectByType<GlitchController>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
-        glitchController.TriggerGlitch(0, 2f);
-        DOVirtual.DelayedCall(2f, () => BeatSystem.isStop = false);
+
+        if (SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            glitchController.TriggerGlitch(0, 2f);
+            DOVirtual.DelayedCall(2f, () => BeatSystem.isStop = false);
+        }
 
         if (spotLight != null)
         {
