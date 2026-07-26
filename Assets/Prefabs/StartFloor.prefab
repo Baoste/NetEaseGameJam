@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 43760206368643250}
   - component: {fileID: 1863227829721574440}
   - component: {fileID: 418850567381853535}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: StartFloor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,10 +179,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7136622550182105865, guid: 5e646b896bd4e00439a491a2da47180a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5e646b896bd4e00439a491a2da47180a,
         type: 3}
       propertyPath: m_Name
       value: Floor_Special
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5e646b896bd4e00439a491a2da47180a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 996808588614277070, guid: 5e646b896bd4e00439a491a2da47180a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4517996882990165669, guid: 5e646b896bd4e00439a491a2da47180a,
         type: 3}

@@ -75,7 +75,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                         peopleShadow.SetActive(true);
 
                         peopleShadow.transform
-                            .DOLocalMoveY(1.35f, 0.1f * BeatSystem.beatTime)
+                            .DOLocalMoveY(0.583f, 0.1f * BeatSystem.beatTime)
                             .SetEase(Ease.InCubic);
                     });
                     rend.GetPropertyBlock(propBlock);
@@ -99,7 +99,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 if (nextBeatChar == 'x')
                 {
                     peopleShadow.SetActive(true);
-                    peopleShadow.transform.localPosition = new Vector3(0f, 1.35f, 0f); 
+                    peopleShadow.transform.localPosition = new Vector3(0f, 0.583f, 0f); 
                     rend.GetPropertyBlock(propBlock);
                     propBlock.SetColor("_LightColor", Color.black);
                     propBlock.SetFloat("_LightOn", 0f);
@@ -109,7 +109,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 else
                 {
                     peopleShadow.SetActive(true);
-                    peopleShadow.transform.localPosition = new Vector3(0f, 1.35f, 0f);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 0.583f, 0f);
                     DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
                     {
                         peopleShadow.transform
@@ -121,7 +121,6 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                     propBlock.SetFloat("_LightOn", 1f);
                     rend.SetPropertyBlock(propBlock);
                 }
-
                 break;
             default:
                 break;
@@ -145,8 +144,15 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         BeatSystem.beatUpdateObjects.Remove(sortIndex);
     }
 
-    void Update()
+    public void WavePeopleShadow()
     {
-        
+        peopleShadow.transform
+            .DOLocalRotate(
+                new Vector3(0f, 0f, 8f),
+                0.25f,
+                RotateMode.LocalAxisAdd
+            )
+            .SetLoops(4, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 }

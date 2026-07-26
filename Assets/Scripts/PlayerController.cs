@@ -20,21 +20,20 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private void Awake()
     {
         originPosition = transform.position;
-        transform.position = originPosition + Vector3.up * 3f;
+        transform.position = originPosition + Vector3.up * 6f;
         BeatSystem.beatUpdateObjects[0] = this;
         canMove = false;
     }
 
     public void BeatReset()
     {
-        transform.position = originPosition + Vector3.up * 3f;
+        transform.position = originPosition + Vector3.up * 6f;
         visitCounts.Clear();
         hasRecordedCurrentFloor = false;
         lastMoveDirection = Vector3.forward;
-        
+
+        playerAnimator.SetTrigger("Idle");
         canMove = false;
-        playerAnimator.SetBool("Idle", true);
-        playerAnimator.SetBool("Walk", false);
     }
 
     private void Update()
@@ -46,6 +45,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
             foreach (FloorGroupSpawner spawner in spawners)
                 spawner.ResetFloorGroups();
 
+            playerAnimator.SetTrigger("Catch");
             SingleSceneManager.Instance.PlayerBeFound(transform.position);
         }
 
@@ -56,8 +56,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
                 .SetEase(Ease.InCubic);
             
             canMove = true;
-            playerAnimator.SetBool("Walk", true);
-            playerAnimator.SetBool("Idle", false);
+            playerAnimator.SetTrigger("Walk");
         }
     }
 
@@ -104,6 +103,13 @@ public void OnBeatUpdate()
                 ), 0.3f)
                 .SetEase(Ease.OutCubic);
 
+                // targetFloor boomb
+                MeshDestroy[] meshes = targetFloor.GetComponentsInChildren<MeshDestroy>();
+                foreach (MeshDestroy m in meshes)
+                {
+                    m.DestroyMesh(3);
+                }
+
                 SingleSceneManager.Instance.PlayerReachEnd();
                 return;
             }
@@ -148,10 +154,13 @@ public void OnBeatUpdate()
             ), 0.3f)
             .SetEase(Ease.OutCubic);
 
+            bestFloor.WavePeopleShadow();
+
             return;
         }
 
         // 被发现
+        playerAnimator.SetTrigger("Catch");
         SingleSceneManager.Instance.PlayerBeFound(transform.position);
     }
 

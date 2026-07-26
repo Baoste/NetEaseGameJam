@@ -126,7 +126,7 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void Update()
     {
-        if (!isDragging || !Input.GetKeyDown(KeyCode.R))
+        if (!isDragging || !Input.GetKeyDown(KeyCode.Q))
             return;
 
         RotateGroupClockwise();
@@ -549,7 +549,7 @@ public class DraggableFloorSnap : MonoBehaviour
                 boxTransform.TransformPoint(boxCollider.center),
                 halfExtents * 0.99f,
                 boxTransform.rotation,
-                ~0,
+                1 << LayerMask.NameToLayer("Floor"),
                 QueryTriggerInteraction.Ignore
             );
 
