@@ -1,6 +1,8 @@
 using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SingleSceneManager : MonoBehaviour
 {
@@ -25,6 +27,12 @@ public class SingleSceneManager : MonoBehaviour
         if (glitchController == null)
             glitchController = FindAnyObjectByType<GlitchController>();
         impulseSource = GetComponent<CinemachineImpulseSource>();
+
+        if (SceneManager.GetActiveScene().buildIndex != 0)
+        {
+            glitchController.TriggerGlitch(0, 2f);
+            DOVirtual.DelayedCall(2f, () => BeatSystem.isStop = false);
+        }
 
         if (spotLight != null)
         {
@@ -54,7 +62,7 @@ public class SingleSceneManager : MonoBehaviour
 
     public void PlayerReachEnd(FloorController fc)
     {
-        BeatSystem.beatTime = 10000f;
+        BeatSystem.isStop = true;
         StartCoroutine(playerReachEndCoroutin(fc));
     }
 
@@ -74,14 +82,56 @@ public class SingleSceneManager : MonoBehaviour
         }
 
 
+        yield return new WaitForSeconds(2f);
+
+        StartCoroutine(LoadNextSceneCoroutine());
+        
+        //glitchController.TriggerGlitch(0.8f, 0.8f);
+        //yield return new WaitForSeconds(1f);
+        
+        //BeatSystem.beatUpdateObjects.Clear();
+        //int currentIndex = SceneManager.GetActiveScene().buildIndex;
+        //int nextIndex = currentIndex + 1;
+        //if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        //{
+        //    BeatSystem.isStop = false;
+        //    SceneManager.LoadScene(nextIndex);
+        //}
+    }
+
+    private IEnumerator LoadNextSceneCoroutine()
+    {
+        BeatSystem.isStop = true;
+
+        int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+
+        if (nextIndex >= SceneManager.sceneCountInBuildSettings)
+        {
+            // BeatSystem.isStop = false;
+            yield break;
+        }
+
+        AsyncOperation operation = SceneManager.LoadSceneAsync(nextIndex);
+        operation.allowSceneActivation = false;
+
+        // progress 到 0.9 表示场景已经加载完成，等待激活
+        while (operation.progress < 0.9f)
+            yield return null;
+
+        glitchController.TriggerGlitch(0.8f, 0.8f);
         yield return new WaitForSeconds(1f);
-        // glitchController.TriggerGlitch(0.8f, 0.8f);
+
+        BeatSystem.beatUpdateObjects.Clear();
+        // BeatSystem.isStop = false;
+
+        // 正式切换到新场景
+        operation.allowSceneActivation = true;
     }
 
 
     public void PlayerBeFound(Vector3 playerPosition)
     {
-        BeatSystem.beatTime = 10000f;
+        BeatSystem.isStop = true;
         StartCoroutine(playerBeFoundCoroutine(playerPosition));
     }
 

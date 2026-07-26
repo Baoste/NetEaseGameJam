@@ -160,7 +160,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     void Start()
     {
-        transform.position += Random.Range(0f, 0.3f) * Vector3.up;
+        transform.position += Random.Range(0f, 0.15f) * Vector3.up;
     }
 
     private void OnDestroy()
