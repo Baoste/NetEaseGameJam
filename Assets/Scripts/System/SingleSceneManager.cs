@@ -30,7 +30,7 @@ public class SingleSceneManager : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex != 0)
         {
-            //glitchController.TriggerGlitch(0, 2f);
+            glitchController.TriggerGlitch(0, 2f);
             DOVirtual.DelayedCall(2f, () => BeatSystem.isStop = false);
         }
 
