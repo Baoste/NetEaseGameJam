@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour, IBeatUpdate
 {
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private void Awake()
     {
         originPosition = transform.position;
+        transform.position = originPosition + Vector3.up * 3f;
         BeatSystem.beatUpdateObjects[0] = this;
         canMove = false;
     }
@@ -24,8 +26,6 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     public void BeatReset()
     {
         transform.position = originPosition + Vector3.up * 3f;
-        transform.DOMoveY(originPosition.y, 0.3f)
-            .SetEase(Ease.InCubic);
         visitCounts.Clear();
         hasRecordedCurrentFloor = false;
         lastMoveDirection = Vector3.forward;
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && canMove)
         {
             FloorGroupSpawner[] spawners =
                 FindObjectsOfType<FloorGroupSpawner>();
@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
         if (Input.GetKeyDown(KeyCode.Space))
         {
             BeatSystem.ResetBeat();
+            transform.DOMoveY(originPosition.y, 0.3f)
+                .SetEase(Ease.InCubic);
             canMove = true;
         }
     }
