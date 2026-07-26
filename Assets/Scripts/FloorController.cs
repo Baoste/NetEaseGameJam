@@ -43,10 +43,17 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     public void BeatReset()
     {
-        currentBeatIndex = 0;
+        // currentBeatIndex = 0;
+        currentBeatIndex = -1;
         if (peopleShadow != null)
         {
-            peopleShadow.SetActive(false);
+            // peopleShadow.SetActive(false);
+            DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
+            {
+                peopleShadow.transform
+                    .DOLocalMoveY(-0.74f, 0.1f * BeatSystem.beatTime)
+                    .SetEase(Ease.InCubic);
+            });
         }
         //char currentBeatChar = beatInfo[currentBeatIndex];
         //char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
@@ -55,6 +62,14 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     public void OnBeatUpdate()
     {
+        if (currentBeatIndex == -1)
+        {
+            if (peopleShadow != null)
+                peopleShadow.SetActive(false);
+            currentBeatIndex = 0;
+            return;
+        }
+
         char currentBeatChar = beatInfo[currentBeatIndex];
         currentBeatIndex = (currentBeatIndex + 1) % beatInfo.Length;
         char nextBeatChar = beatInfo[currentBeatIndex];
@@ -145,6 +160,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     void Start()
     {
+        transform.position += Random.Range(0f, 0.3f) * Vector3.up;
     }
 
     private void OnDestroy()
@@ -156,7 +172,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     {
         peopleShadow.transform
             .DOLocalRotate(
-                new Vector3(0f, 0f, 12f),
+                new Vector3(0f, 0f, 8f),
                 0.5f,
                 RotateMode.LocalAxisAdd
             )

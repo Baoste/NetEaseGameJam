@@ -27,8 +27,14 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
         originPosition = transform.position;
         transform.position = originPosition + Vector3.up * 6f;
         BeatSystem.beatUpdateObjects[0] = this;
-        canMove = false;
         bombRenderer.enabled = isBombActive;
+
+        transform.DOMoveY(originPosition.y, 0.3f)
+                .SetEase(Ease.InCubic);
+        playerAnimator.SetTrigger("Walk");
+        canMove = true;
+
+        //canMove = false;
     }
 
     public void BeatReset()
@@ -38,9 +44,10 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
         hasRecordedCurrentFloor = false;
         lastMoveDirection = Vector3.forward;
 
+        bombRenderer.enabled = isBombActive;
+
         playerAnimator.SetTrigger("Idle");
         canMove = false;
-        bombRenderer.enabled = isBombActive;
     }
 
     private void Update()
@@ -56,20 +63,29 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
             SingleSceneManager.Instance.PlayerBeFound(transform.position);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BeatSystem.ResetBeat();
-            transform.DOMoveY(originPosition.y, 0.3f)
-                .SetEase(Ease.InCubic);
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    BeatSystem.ResetBeat();
+        //    transform.DOMoveY(originPosition.y, 0.3f)
+        //        .SetEase(Ease.InCubic);
             
-            canMove = true;
-            playerAnimator.SetTrigger("Walk");
-        }
+        //    canMove = true;
+        //    playerAnimator.SetTrigger("Walk");
+        //}
     }
 
-public void OnBeatUpdate()
+    public void OnBeatUpdate()
     {
-        if (!canMove) return;
+        // if (!canMove) return;
+        if (!canMove)
+        {
+            transform.DOMoveY(originPosition.y, 0.6f)
+                .SetEase(Ease.InCubic);
+
+            canMove = true;
+            playerAnimator.SetTrigger("Walk");
+            return;
+        }
 
         FloorController[] floors =
             FindObjectsOfType<FloorController>();
@@ -119,6 +135,7 @@ public void OnBeatUpdate()
             else if(targetFloor != null &&
                 targetFloor.GetNextBeatInfo() == '=')
             {
+                // visitCounts.Clear();
                 targetFloor.bomb.SetActive(false);
                 bombRenderer.enabled = true;
             }
