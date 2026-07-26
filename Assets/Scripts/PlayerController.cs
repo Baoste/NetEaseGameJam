@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private float floorSearchTolerance = 0.25f;
     [SerializeField]
     private Animator playerAnimator;
+    [SerializeField]
+    private Renderer bombRenderer;
+    [SerializeField]
+    private bool isBombActive;
 
     private Vector3 originPosition;
     private readonly Dictionary<FloorController, int> visitCounts = new();
@@ -24,6 +28,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
         transform.position = originPosition + Vector3.up * 6f;
         BeatSystem.beatUpdateObjects[0] = this;
         canMove = false;
+        bombRenderer.enabled = isBombActive;
     }
 
     public void BeatReset()
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
         playerAnimator.SetTrigger("Idle");
         canMove = false;
+        bombRenderer.enabled = isBombActive;
     }
 
     private void Update()
@@ -93,8 +99,10 @@ public void OnBeatUpdate()
             FloorController targetFloor =
                 FindFloorAt(floors, targetPosition, cellSize);
 
+            // 终点
             if (targetFloor != null &&
-                targetFloor.GetNextBeatInfo() == '-')
+                targetFloor.GetNextBeatInfo() == '-' &&
+                bombRenderer.enabled)
             {
                 FaceDirection(direction);
                 //transform.DOMove(new Vector3(
@@ -106,6 +114,13 @@ public void OnBeatUpdate()
                 playerAnimator.SetTrigger("Expo");
                 SingleSceneManager.Instance.PlayerReachEnd(targetFloor);
                 return;
+            }
+            // 中途打卡点
+            else if(targetFloor != null &&
+                targetFloor.GetNextBeatInfo() == '=')
+            {
+                targetFloor.bomb.SetActive(false);
+                bombRenderer.enabled = true;
             }
         }
 

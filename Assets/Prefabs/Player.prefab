@@ -71,6 +71,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   floorSearchTolerance: 0.05
   playerAnimator: {fileID: 7213399609055553572}
+  bombRenderer: {fileID: 102324095492678234}
+  isBombActive: 1
 --- !u!1001 &6252979485836199712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -149,10 +151,20 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9ce02c3a2239539448426730bbead2fc, type: 2}
+    - target: {fileID: -1018664272722485354, guid: 3f51ef520eea6704c98077aa95fed2b8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3f51ef520eea6704c98077aa95fed2b8,
         type: 3}
       propertyPath: m_Name
       value: "\u5C0F\u4EBA\u524D\u8FDB\u52A8\u753B30\u5E27"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6317578925029434746, guid: 3f51ef520eea6704c98077aa95fed2b8,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6317578925029434746, guid: 3f51ef520eea6704c98077aa95fed2b8,
         type: 3}
@@ -168,6 +180,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7213399609055553572}
   m_SourcePrefab: {fileID: 100100000, guid: 3f51ef520eea6704c98077aa95fed2b8, type: 3}
+--- !u!23 &102324095492678234 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6317578925029434746, guid: 3f51ef520eea6704c98077aa95fed2b8,
+    type: 3}
+  m_PrefabInstance: {fileID: 6252979485836199712}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5858535275490123979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3f51ef520eea6704c98077aa95fed2b8,

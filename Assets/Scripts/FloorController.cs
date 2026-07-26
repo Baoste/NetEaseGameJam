@@ -10,6 +10,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
 
     [Header("Component")]
     [SerializeField] private GameObject peopleShadow;
+    [SerializeField] public GameObject bomb;
     private Renderer rend;
     private MaterialPropertyBlock propBlock;
 
