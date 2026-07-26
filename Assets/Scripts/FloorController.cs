@@ -45,6 +45,10 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     {
         // currentBeatIndex = 0;
         currentBeatIndex = -1;
+        if (bomb != null)
+        {
+            bomb.SetActive(true);
+        }
         if (peopleShadow != null)
         {
             // peopleShadow.SetActive(false);
