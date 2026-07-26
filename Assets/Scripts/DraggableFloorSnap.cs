@@ -135,7 +135,8 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (HasPlayerStandingOnGroup() || CanPlayerMove())
+        //if (HasPlayerStandingOnGroup() || CanPlayerMove())
+        if (HasPlayerStandingOnGroup())
             return;
 
         if (targetCamera == null)
