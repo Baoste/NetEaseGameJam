@@ -133,7 +133,7 @@ PrefabInstance:
     - target: {fileID: 418850567381853535, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
       propertyPath: beatInfo
-      value: xooo
+      value: oxo
       objectReference: {fileID: 0}
     - target: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
@@ -261,7 +261,7 @@ PrefabInstance:
     - target: {fileID: 418850567381853535, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
       propertyPath: beatInfo
-      value: oxoo
+      value: oxo
       objectReference: {fileID: 0}
     - target: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
@@ -340,7 +340,7 @@ PrefabInstance:
     - target: {fileID: 418850567381853535, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
       propertyPath: beatInfo
-      value: ooox
+      value: xoo
       objectReference: {fileID: 0}
     - target: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
@@ -987,21 +987,10 @@ MonoBehaviour:
     type: 3}
   floorGroupInfos:
   - beatInfo:
-    - 
-    - xoo
-    - xoo
-    - oxo
-    - 
-    - oox
-    columnCount: 2
-  - beatInfo:
-    - 
-    - xoo
-    - oxo
     - oox
     - xoo
-    - 
-    columnCount: 2
+    - oxo
+    columnCount: 1
   floorSize: {x: 1, y: 1}
   floorSpacing: {x: 4, y: 4}
   floorEuler: {x: 0, y: 0, z: 0}
@@ -1034,7 +1023,7 @@ PrefabInstance:
     - target: {fileID: 418850567381853535, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
       propertyPath: beatInfo
-      value: oxoo
+      value: oox
       objectReference: {fileID: 0}
     - target: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
@@ -1113,7 +1102,7 @@ PrefabInstance:
     - target: {fileID: 418850567381853535, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
       propertyPath: beatInfo
-      value: xooo
+      value: xoo
       objectReference: {fileID: 0}
     - target: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
         type: 3}
