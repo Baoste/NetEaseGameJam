@@ -235,14 +235,20 @@ MonoBehaviour:
   floorGroupInfos:
   - beatInfo:
     - x
-    - o
     - x
-    columnCount: 1
+    - x
+    - 
+    - x
+    - 
+    columnCount: 2
   - beatInfo:
     - x
     - x
+    - 
     - o
-    columnCount: 1
+    - 
+    - x
+    columnCount: 2
   floorSize: {x: 1, y: 1}
   floorSpacing: {x: 4, y: 4}
   floorEuler: {x: 0, y: 0, z: 0}
