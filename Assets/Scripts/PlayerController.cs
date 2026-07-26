@@ -10,16 +10,9 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private Vector3 originPosition;
     private readonly Dictionary<FloorController, int> visitCounts = new();
     private bool hasRecordedCurrentFloor;
+    private Vector3 lastMoveDirection = Vector3.forward;
 
     public bool canMove { get; private set; }
-
-    private static readonly Vector3[] SearchDirections =
-    {
-        Vector3.forward,
-        Vector3.right,
-        Vector3.back,
-        Vector3.left
-    };
 
     private void Awake()
     {
@@ -35,6 +28,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
             .SetEase(Ease.InCubic);
         visitCounts.Clear();
         hasRecordedCurrentFloor = false;
+        lastMoveDirection = Vector3.forward;
         canMove = false;
     }
 
@@ -78,8 +72,10 @@ public void OnBeatUpdate()
 
         FloorController bestFloor = null;
         int lowestVisitCount = int.MaxValue;
+        Vector3[] searchDirections =
+            GetRelativeSearchDirections();
 
-        foreach (Vector3 direction in SearchDirections)
+        foreach (Vector3 direction in searchDirections)
         {
             Vector3 targetPosition =
                 transform.position + direction * cellSize;
@@ -102,7 +98,7 @@ public void OnBeatUpdate()
             }
         }
 
-        foreach (Vector3 direction in SearchDirections)
+        foreach (Vector3 direction in searchDirections)
         {
             Vector3 targetPosition =
                 transform.position + direction * cellSize;
@@ -127,6 +123,10 @@ public void OnBeatUpdate()
         if (bestFloor != null)
         {
             RecordVisit(bestFloor);
+            lastMoveDirection = (
+                bestFloor.transform.position -
+                transform.position
+            ).normalized;
 
             transform.DOMove(new Vector3(
                 bestFloor.transform.position.x,
@@ -140,6 +140,31 @@ public void OnBeatUpdate()
 
         // 被发现
         SingleSceneManager.Instance.PlayerBeFound(transform.position);
+    }
+
+    private Vector3[] GetRelativeSearchDirections()
+    {
+        Vector3 forward = new Vector3(
+            lastMoveDirection.x,
+            0f,
+            lastMoveDirection.z
+        ).normalized;
+
+        if (forward.sqrMagnitude < 0.01f)
+            forward = Vector3.forward;
+
+        Vector3 left =
+            Vector3.Cross(forward, Vector3.up);
+        Vector3 right =
+            Vector3.Cross(Vector3.up, forward);
+
+        return new[]
+        {
+            forward,
+            left,
+            right,
+            -forward
+        };
     }
 
     private int GetVisitCount(FloorController floor)
