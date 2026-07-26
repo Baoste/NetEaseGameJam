@@ -119,8 +119,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599149a7eaac78a4f9741c957f7f88c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beatInfo: x
-  peopleShadow: {fileID: 0}
+  beatInfo: o
+  peopleShadow: {fileID: 85783910176783183, guid: fd6f16f73257f1143813cd08a18dcd6f,
+    type: 3}
 --- !u!1001 &5137236588428380078
 PrefabInstance:
   m_ObjectHideFlags: 0
