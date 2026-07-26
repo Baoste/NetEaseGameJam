@@ -5,6 +5,8 @@ public class SingleSceneManager : MonoBehaviour
 {
     public static SingleSceneManager Instance { get; private set; }
 
+    [SerializeField] private GlitchController glitchController;
+
     [Header("Spot Light")]
     [SerializeField] private GameObject spotLight;
 
@@ -43,8 +45,8 @@ public class SingleSceneManager : MonoBehaviour
 
     private IEnumerator playerReachEndCoroutin()
     {
-        Debug.Log("玩家到达终点，游戏胜利！");
-        yield break;
+        yield return new WaitForSeconds(1f);
+        glitchController.TriggerGlitch(0.8f, 0.8f);
     }
 
 

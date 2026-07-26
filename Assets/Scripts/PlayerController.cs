@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 {
     [SerializeField, Min(0.01f)]
     private float floorSearchTolerance = 0.25f;
+    [SerializeField]
+    private Animator playerAnimator;
 
     private Vector3 originPosition;
     private readonly Dictionary<FloorController, int> visitCounts = new();
@@ -29,7 +31,10 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
         visitCounts.Clear();
         hasRecordedCurrentFloor = false;
         lastMoveDirection = Vector3.forward;
+        
         canMove = false;
+        playerAnimator.SetBool("Idle", true);
+        playerAnimator.SetBool("Walk", false);
     }
 
     private void Update()
@@ -49,7 +54,10 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
             BeatSystem.ResetBeat();
             transform.DOMoveY(originPosition.y, 0.3f)
                 .SetEase(Ease.InCubic);
+            
             canMove = true;
+            playerAnimator.SetBool("Walk", true);
+            playerAnimator.SetBool("Idle", false);
         }
     }
 

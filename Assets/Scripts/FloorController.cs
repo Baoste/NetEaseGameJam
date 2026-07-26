@@ -42,7 +42,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         currentBeatIndex = 0;
         char currentBeatChar = beatInfo[currentBeatIndex];
         char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
-        SetFloorStatus(currentBeatChar, nextBeatChar);
+        SetFloorStatus(currentBeatChar, currentBeatChar);
     }
 
     public void OnBeatUpdate()
@@ -69,6 +69,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 if (nextBeatChar == 'x')
                 {
                     peopleShadow.SetActive(false);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 0f, 0f);
                     DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
                     {
                         peopleShadow.SetActive(true);
@@ -108,6 +109,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 else
                 {
                     peopleShadow.SetActive(true);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 1.35f, 0f);
                     DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
                     {
                         peopleShadow.transform

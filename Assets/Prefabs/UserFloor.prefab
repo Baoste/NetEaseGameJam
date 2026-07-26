@@ -181,6 +181,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7635826562936255635, guid: 79ebaab8e86eb2c498fb9a04af7d74fb,
         type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 79ebaab8e86eb2c498fb9a04af7d74fb,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 28ad821a554f6ed4fa97506140828799, type: 2}
