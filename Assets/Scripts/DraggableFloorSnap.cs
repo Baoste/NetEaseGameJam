@@ -135,7 +135,7 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (HasPlayerStandingOnGroup())
+        if (HasPlayerStandingOnGroup() || CanPlayerMove())
             return;
 
         if (targetCamera == null)
@@ -157,12 +157,20 @@ public class DraggableFloorSnap : MonoBehaviour
         // 防止点击后物体中心瞬间跳到鼠标位置。
         dragOffset = new Vector3(
             DragTarget.position.x - mouseWorldPosition.x,
-            0f,
+            0.2f,
             DragTarget.position.z - mouseWorldPosition.z
         );
 
         CreateHologram();
         HideHologram();
+    }
+
+    private bool CanPlayerMove()
+    {
+        PlayerController player =
+            FindObjectOfType<PlayerController>();
+
+        return player != null && player.canMove;
     }
 
     private bool HasPlayerStandingOnGroup()

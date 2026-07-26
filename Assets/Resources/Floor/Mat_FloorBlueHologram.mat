@@ -35,10 +35,10 @@ Material:
     - _GlitchFrequency: 25
     - _GlitchSpeed: 8
     - _GlitchStrength: 0.015
-    - _ScanLineDensity: 80
+    - _ScanLineDensity: 2
     - _ScanLineIntensity: 1.5
-    - _ScanLineSpeed: 2
-    - _ScanLineWidth: 0.15
+    - _ScanLineSpeed: 1
+    - _ScanLineWidth: 0.527
     m_Colors:
     - _HologramColor: {r: 0, g: 0.6, b: 1, a: 1}
   m_BuildTextureStacks: []

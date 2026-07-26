@@ -34,13 +34,27 @@ public class SingleSceneManager : MonoBehaviour
         }
     }
 
+
+    public void PlayerReachEnd()
+    {
+        BeatSystem.beatTime = 10000f;
+        StartCoroutine(playerReachEndCoroutin());
+    }
+
+    private IEnumerator playerReachEndCoroutin()
+    {
+        Debug.Log("玩家到达终点，游戏胜利！");
+        yield break;
+    }
+
+
     public void PlayerBeFound(Vector3 playerPosition)
     {
         BeatSystem.beatTime = 10000f;
-        StartCoroutine(PlayerBeFoundCoroutine(playerPosition));
+        StartCoroutine(playerBeFoundCoroutine(playerPosition));
     }
 
-    private IEnumerator PlayerBeFoundCoroutine(Vector3 playerPosition)
+    private IEnumerator playerBeFoundCoroutine(Vector3 playerPosition)
     {
         if (spotLight == null)
         {

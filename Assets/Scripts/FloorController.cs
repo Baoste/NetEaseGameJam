@@ -40,31 +40,42 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     {
         currentBeatIndex = 0;
         char currentBeatChar = beatInfo[currentBeatIndex];
-        SetFloorStatus(currentBeatChar);
+        char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
+        SetFloorStatus(currentBeatChar, nextBeatChar);
     }
 
     public void OnBeatUpdate()
     {
         char currentBeatChar = beatInfo[currentBeatIndex];
         currentBeatIndex = (currentBeatIndex + 1) % beatInfo.Length;
+        char nextBeatChar = beatInfo[currentBeatIndex];
 
         transform.DOPunchPosition(
             new Vector3(0, 0.1f, 0), 0.2f,
             vibrato: 1, elasticity: 0.5f
         );
 
-        SetFloorStatus(currentBeatChar);
+        SetFloorStatus(currentBeatChar, nextBeatChar);
     }
 
-    private void SetFloorStatus(char currentBeatChar)
+    private void SetFloorStatus(char currentBeatChar, char nextBeatChar)
     {
         // Change the floor status based on the current beat info
         switch (currentBeatChar)
         {
             case 'o':
-                rend.GetPropertyBlock(propBlock);
-                propBlock.SetColor("_BaseColor", Color.white);
-                rend.SetPropertyBlock(propBlock);
+                if (nextBeatChar == 'x')
+                {
+                    rend.GetPropertyBlock(propBlock);
+                    propBlock.SetColor("_BaseColor", Color.blue);
+                    rend.SetPropertyBlock(propBlock);
+                }
+                else
+                {
+                    rend.GetPropertyBlock(propBlock);
+                    propBlock.SetColor("_BaseColor", Color.white);
+                    rend.SetPropertyBlock(propBlock);
+                }
                 break;
             case 'x':
                 rend.GetPropertyBlock(propBlock);
@@ -72,7 +83,6 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 rend.SetPropertyBlock(propBlock);
                 break;
             default:
-                Debug.LogWarning("Unknown floor status: " + currentBeatChar);
                 break;
         }
     }
