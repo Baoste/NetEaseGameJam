@@ -31,7 +31,7 @@ public class CameraBottomEdgeTilt : MonoBehaviour
             mouseYPercent
         );
 
-        float tiltAngle = maxTiltAngle * tiltRatio;
+        float tiltAngle = maxTiltAngle * Mathf.Min(tiltRatio, 1f);
 
         Quaternion targetRotation =
             initialLocalRotation *
