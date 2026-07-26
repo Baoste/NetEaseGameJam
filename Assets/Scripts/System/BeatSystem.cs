@@ -6,7 +6,10 @@ using UnityEngine;
 
 public class BeatSystem : MonoBehaviour
 {
-    public static float beatTime = 1f;
+    [SerializeField] private float beatTimeValue;
+
+    public static bool isStop = false;
+    public static float beatTime { get; private set; }
     public static SortedDictionary<int, IBeatUpdate> beatUpdateObjects = new();
 
     private static float gameTime;
@@ -14,11 +17,15 @@ public class BeatSystem : MonoBehaviour
     private void Start()
     {
         gameTime = 0f;
+        beatTime = beatTimeValue;
     }
 
     private void Update()
     {
-        gameTime += Time.deltaTime;
+        if (!isStop)
+        {
+            gameTime += Time.deltaTime;
+        }
 
         if (gameTime > beatTime)
         {
@@ -32,8 +39,7 @@ public class BeatSystem : MonoBehaviour
 
     public static void ResetBeat()
     {
-        gameTime = 0f;
-        beatTime = 1f;
+        isStop = false;
         foreach (var beatUpdateObject in beatUpdateObjects.Values)
         {
             beatUpdateObject.BeatReset();

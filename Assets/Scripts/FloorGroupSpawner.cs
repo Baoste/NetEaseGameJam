@@ -39,7 +39,7 @@ public class FloorGroupSpawner : MonoBehaviour
     {
         GameObject floorGroup = Instantiate(
             floorGroupPrefab,
-            instantiatePosition,
+            transform.position + instantiatePosition,
             Quaternion.identity
         );
 
