@@ -9,6 +9,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     private int currentBeatIndex = 0;
 
     [Header("Component")]
+    [SerializeField] private GameObject peopleShadow;
     private Renderer rend;
     private MaterialPropertyBlock propBlock;
 
@@ -41,7 +42,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         currentBeatIndex = 0;
         char currentBeatChar = beatInfo[currentBeatIndex];
         char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
-        SetFloorStatus(currentBeatChar, nextBeatChar);
+        SetFloorStatus(currentBeatChar, currentBeatChar);
     }
 
     public void OnBeatUpdate()
@@ -64,23 +65,63 @@ public class FloorController : MonoBehaviour, IBeatUpdate
         switch (currentBeatChar)
         {
             case 'o':
+                // 白要变黑
                 if (nextBeatChar == 'x')
                 {
+                    peopleShadow.SetActive(false);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
+                    {
+                        peopleShadow.SetActive(true);
+
+                        peopleShadow.transform
+                            .DOLocalMoveY(1.35f, 0.1f * BeatSystem.beatTime)
+                            .SetEase(Ease.InCubic);
+                    });
                     rend.GetPropertyBlock(propBlock);
-                    propBlock.SetColor("_BaseColor", Color.blue);
+                    propBlock.SetColor("_LightColor", Color.white);
+                    propBlock.SetFloat("_LightOn", 0f);
                     rend.SetPropertyBlock(propBlock);
                 }
+                // 白要变白
                 else
                 {
+                    peopleShadow.SetActive(false);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 0f, 0f);
                     rend.GetPropertyBlock(propBlock);
-                    propBlock.SetColor("_BaseColor", Color.white);
+                    propBlock.SetColor("_LightColor", Color.white);
+                    propBlock.SetFloat("_LightOn", 1f);
                     rend.SetPropertyBlock(propBlock);
                 }
                 break;
             case 'x':
-                rend.GetPropertyBlock(propBlock);
-                propBlock.SetColor("_BaseColor", Color.black);
-                rend.SetPropertyBlock(propBlock);
+                // 黑要变黑
+                if (nextBeatChar == 'x')
+                {
+                    peopleShadow.SetActive(true);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 1.35f, 0f); 
+                    rend.GetPropertyBlock(propBlock);
+                    propBlock.SetColor("_LightColor", Color.black);
+                    propBlock.SetFloat("_LightOn", 0f);
+                    rend.SetPropertyBlock(propBlock);
+                }
+                // 黑要变白
+                else
+                {
+                    peopleShadow.SetActive(true);
+                    peopleShadow.transform.localPosition = new Vector3(0f, 1.35f, 0f);
+                    DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
+                    {
+                        peopleShadow.transform
+                            .DOLocalMoveY(0f, 0.1f * BeatSystem.beatTime)
+                            .SetEase(Ease.InCubic);
+                    });
+                    rend.GetPropertyBlock(propBlock);
+                    propBlock.SetColor("_LightColor", Color.black);
+                    propBlock.SetFloat("_LightOn", 1f);
+                    rend.SetPropertyBlock(propBlock);
+                }
+
                 break;
             default:
                 break;

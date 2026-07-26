@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8399178331525763017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e1aeb5c9708be947ae62a102a44e2cb, type: 3}
+  m_Name: GlitchPostProcessing
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    blitMaterial: {fileID: 2100000, guid: 8848fcef1cf01ff49a57ff51b20cfeb3, type: 2}
+    passEvent: 600
 --- !u!114 &-6407870797118854182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +86,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: -6407870797118854182}
-  m_RendererFeatureMap: adc0de57c6d2eee5daab21db75ab12a7
+  - {fileID: -8399178331525763017}
+  m_RendererFeatureMap: adc0de57c6d2eee5daab21db75ab12a737b03fe8ce1f708b
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}

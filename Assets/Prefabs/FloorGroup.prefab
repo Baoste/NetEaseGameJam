@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 605ad69966f259a478f41832a554d1b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 2569208165897354954, guid: 898fa527ddb6b2640a07e25064352656,
+  floorPrefab: {fileID: 2569208165897354954, guid: f6c90cee4502958499ed3724dfa35fd6,
     type: 3}
   floorInstances: []
   hologramMaterial: {fileID: 2100000, guid: e5a5007af46037c4fb5c5e3447cc7134, type: 2}
