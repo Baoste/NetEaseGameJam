@@ -1358,7 +1358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e54e17055517ac4f80fd43f8ec438a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomEdgePercent: 0.1
+  bottomEdgePercent: 0.16
   maxTiltAngle: 8
   rotationSpeed: 8
 --- !u!1001 &581238390
