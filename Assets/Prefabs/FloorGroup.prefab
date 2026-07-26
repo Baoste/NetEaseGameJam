@@ -48,3 +48,4 @@ MonoBehaviour:
     type: 3}
   floorInstances: []
   hologramMaterial: {fileID: 2100000, guid: e5a5007af46037c4fb5c5e3447cc7134, type: 2}
+  cellSize: 1

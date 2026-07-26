@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IBeatUpdate
@@ -7,6 +8,8 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private float floorSearchTolerance = 0.25f;
 
     private Vector3 originPosition;
+    private readonly Dictionary<FloorController, int> visitCounts = new();
+    private bool hasRecordedCurrentFloor;
 
     private static readonly Vector3[] SearchDirections =
     {
@@ -25,6 +28,8 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     public void BeatReset()
     {
         transform.position = originPosition;
+        visitCounts.Clear();
+        hasRecordedCurrentFloor = false;
     }
 
     public void OnBeatUpdate()
@@ -34,6 +39,19 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
         float cellSize = GetCellSize(floors);
 
+        if (!hasRecordedCurrentFloor)
+        {
+            FloorController currentFloor =
+                FindFloorAt(floors, transform.position, cellSize);
+            if (currentFloor != null)
+                RecordVisit(currentFloor);
+
+            hasRecordedCurrentFloor = true;
+        }
+
+        FloorController bestFloor = null;
+        int lowestVisitCount = int.MaxValue;
+
         foreach (Vector3 direction in SearchDirections)
         {
             Vector3 targetPosition =
@@ -42,20 +60,48 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
             FloorController targetFloor =
                 FindFloorAt(floors, targetPosition, cellSize);
 
-            if (targetFloor != null &&
-                targetFloor.GetNextBeatInfo() == 'x')
+            if (targetFloor == null ||
+                targetFloor.GetNextBeatInfo() != 'x')
             {
-                transform.DOMove(new Vector3(
-                    targetFloor.transform.position.x,
-                    transform.position.y,
-                    targetFloor.transform.position.z
-                ), 0.3f)
-                .SetEase(Ease.OutCubic);
-                return;
+                continue;
+            }
+
+            int visitCount = GetVisitCount(targetFloor);
+            if (visitCount < lowestVisitCount)
+            {
+                lowestVisitCount = visitCount;
+                bestFloor = targetFloor;
             }
         }
 
-        BeatSystem.ResetBeat();
+        if (bestFloor != null)
+        {
+            RecordVisit(bestFloor);
+
+            transform.DOMove(new Vector3(
+                bestFloor.transform.position.x,
+                transform.position.y,
+                bestFloor.transform.position.z
+            ), 0.3f)
+            .SetEase(Ease.OutCubic);
+
+            return;
+        }
+
+        // 被发现
+        SingleSceneManager.Instance.PlayerBeFound(transform.position);
+    }
+
+    private int GetVisitCount(FloorController floor)
+    {
+        return visitCounts.TryGetValue(floor, out int count)
+            ? count
+            : 0;
+    }
+
+    private void RecordVisit(FloorController floor)
+    {
+        visitCounts[floor] = GetVisitCount(floor) + 1;
     }
 
     private float GetCellSize(FloorController[] floors)
@@ -83,7 +129,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
         return closestFloor != null
             ? closestFloor.GetCellSize()
-            : 2f;
+            : 1f;
     }
 
     private FloorController FindFloorAt(
@@ -116,5 +162,4 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     {
         BeatSystem.beatUpdateObjects.Remove(0);
     }
-
 }

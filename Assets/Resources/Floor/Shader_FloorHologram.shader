@@ -229,7 +229,7 @@ Shader "Custom/BlueHologram"
                     flicker *
                     depthFade;
 
-                finalAlpha = saturate(finalAlpha);
+                finalAlpha = saturate(finalAlpha + 0.2f);
 
                 return half4(finalColor, finalAlpha);
             }

@@ -33,7 +33,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
             GetComponentInParent<FloorGroup>();
         return floorGroup != null
             ? floorGroup.CellSize
-            : 2f;
+            : 1f;
     }
 
     public void BeatReset()

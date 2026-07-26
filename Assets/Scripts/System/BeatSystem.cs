@@ -7,7 +7,7 @@ using UnityEngine;
 public class BeatSystem : MonoBehaviour
 {
     public static float beatTime = 1f;
-    public static Dictionary<int, IBeatUpdate> beatUpdateObjects = new();
+    public static SortedDictionary<int, IBeatUpdate> beatUpdateObjects = new();
 
     private static float gameTime;
 
@@ -23,12 +23,9 @@ public class BeatSystem : MonoBehaviour
         if (gameTime > beatTime)
         {
             gameTime = 0f;
-            foreach (var pair in beatUpdateObjects.OrderBy(pair => pair.Key))
+            foreach (var pair in beatUpdateObjects)
             {
-                int id = pair.Key;
-                IBeatUpdate beatUpdate = pair.Value;
-
-                beatUpdate.OnBeatUpdate();
+                pair.Value.OnBeatUpdate();
             }
         }
     }
@@ -36,6 +33,7 @@ public class BeatSystem : MonoBehaviour
     public static void ResetBeat()
     {
         gameTime = 0f;
+        beatTime = 1f;
         foreach (var beatUpdateObject in beatUpdateObjects.Values)
         {
             beatUpdateObject.BeatReset();

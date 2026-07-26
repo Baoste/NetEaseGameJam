@@ -10,14 +10,40 @@ public class FloorGroup : MonoBehaviour
 
     [Header("Grid")]
     [Tooltip("统一控制 Floor 的 X/Z 尺寸、组内排列间距和拖拽吸附网格。")]
-    [SerializeField, Min(0.01f)] private float cellSize = 2f;
+    [SerializeField, Min(0.5f)] private float cellSize = 1f;
+
+    private FloorGroupSpawner ownerSpawner;
 
     public float CellSize => cellSize;
+    public FloorGroupSpawner OwnerSpawner => ownerSpawner;
 
     public Transform FirstFloor =>
         floorInstances.Count > 0 && floorInstances[0] != null
             ? floorInstances[0].transform
             : transform;
+
+    public void SetSpawner(FloorGroupSpawner spawner)
+    {
+        ownerSpawner = spawner;
+    }
+
+    public bool IsInsideSpawnerZone()
+    {
+        return ownerSpawner != null &&
+               ownerSpawner.IsInsideZone(transform.position);
+    }
+
+    public void ReturnToSpawner(float duration = 0.3f)
+    {
+        if (ownerSpawner != null)
+            ownerSpawner.ReturnFloorGroup(gameObject, duration);
+    }
+
+    public void LeaveSpawnerLayout(float duration = 0.3f)
+    {
+        if (ownerSpawner != null)
+            ownerSpawner.RemoveFloorGroupFromLayout(gameObject, duration);
+    }
 
     public void GenerateGroup(string[] beatInfos, int columnCount)
     {

@@ -21,6 +21,10 @@ public class DraggableFloorSnap : MonoBehaviour
     [Tooltip("Floor 拖动时所在的固定 Y 坐标。")]
     [SerializeField] private float planeY = 0f;
 
+    [Tooltip("检测 Player 是否站在当前地板组上的向下射线距离。")]
+    [SerializeField, Min(0.01f)]
+    private float playerStandingCheckDistance = 3f;
+
     [Header("Grid Snap")]
 
     [Tooltip("网格间隔。设置为 2 时，坐标为 (2a, n, 2b)。")]
@@ -131,6 +135,9 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (HasPlayerStandingOnGroup())
+            return;
+
         if (targetCamera == null)
         {
             Debug.LogError("没有找到用于拖动的摄像机。", this);
@@ -156,6 +163,40 @@ public class DraggableFloorSnap : MonoBehaviour
 
         CreateHologram();
         HideHologram();
+    }
+
+    private bool HasPlayerStandingOnGroup()
+    {
+        PlayerController[] players =
+            FindObjectsOfType<PlayerController>();
+
+        foreach (PlayerController player in players)
+        {
+            if (player == null)
+                continue;
+
+            Vector3 rayOrigin =
+                player.transform.position + Vector3.up * 0.1f;
+
+            RaycastHit[] hits = Physics.RaycastAll(
+                rayOrigin,
+                Vector3.down,
+                playerStandingCheckDistance,
+                ~0,
+                QueryTriggerInteraction.Ignore
+            );
+
+            foreach (RaycastHit hit in hits)
+            {
+                if (hit.collider != null &&
+                    hit.collider.transform.IsChildOf(DragTarget))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void OnMouseDrag()
@@ -185,6 +226,17 @@ public class DraggableFloorSnap : MonoBehaviour
         targetPosition.y = planeY;
 
         DragTarget.position = targetPosition;
+
+        FloorGroup floorGroup =
+            DragTarget.GetComponent<FloorGroup>();
+        if (floorGroup != null &&
+            floorGroup.IsInsideSpawnerZone())
+        {
+            canSnap = false;
+            isPlacementBlocked = false;
+            HideHologram();
+            return;
+        }
 
         currentSnapPosition = CalculateSnapPosition(targetPosition);
 
@@ -220,6 +272,17 @@ public class DraggableFloorSnap : MonoBehaviour
     {
         isDragging = false;
 
+        FloorGroup floorGroup =
+            DragTarget.GetComponent<FloorGroup>();
+
+        if (floorGroup != null &&
+            floorGroup.IsInsideSpawnerZone())
+        {
+            floorGroup.ReturnToSpawner();
+            ResetDragState();
+            return;
+        }
+
         if (canSnap && !isPlacementBlocked)
         {
             if (createCopyOnRelease)
@@ -232,6 +295,8 @@ public class DraggableFloorSnap : MonoBehaviour
             else if (snapOriginalOnRelease)
             {
                 DragTarget.position = currentSnapPosition;
+                if (floorGroup != null)
+                    floorGroup.LeaveSpawnerLayout();
             }
         }
         else
@@ -239,6 +304,11 @@ public class DraggableFloorSnap : MonoBehaviour
             ReturnToSpawner();
         }
 
+        ResetDragState();
+    }
+
+    private void ResetDragState()
+    {
         canSnap = false;
         isPlacementBlocked = false;
         HideHologram();
@@ -269,6 +339,15 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void ReturnToSpawner()
     {
+        FloorGroup floorGroup =
+            DragTarget.GetComponent<FloorGroup>();
+        if (floorGroup != null &&
+            floorGroup.OwnerSpawner != null)
+        {
+            floorGroup.ReturnToSpawner();
+            return;
+        }
+
         DragTarget.SetPositionAndRotation(
             dragStartPosition,
             dragStartRotation
@@ -520,6 +599,13 @@ public class DraggableFloorSnap : MonoBehaviour
 
         newFloor.name =
             $"{sourcePrefab.name}_Grid_{CurrentGridA}_{CurrentGridB}";
+
+        FloorGroup sourceGroup =
+            DragTarget.GetComponent<FloorGroup>();
+        FloorGroup newGroup =
+            newFloor.GetComponent<FloorGroup>();
+        if (sourceGroup != null && newGroup != null)
+            newGroup.SetSpawner(sourceGroup.OwnerSpawner);
     }
 
     private static void SetLayerRecursively(

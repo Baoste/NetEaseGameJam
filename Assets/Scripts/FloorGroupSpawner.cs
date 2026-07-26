@@ -50,10 +50,44 @@ public class FloorGroupSpawner : MonoBehaviour
             return;
         }
 
+        floorGroupController.SetSpawner(this);
         floorGroupController.GenerateGroup(beatInfo, columnCount);
 
         floorGroupInstances.Add(floorGroup);
         StartCoroutine(UpdateFloorPositions(duration));
+    }
+
+    public bool IsInsideZone(Vector3 worldPosition)
+    {
+        Vector3 localPosition =
+            transform.InverseTransformPoint(worldPosition);
+
+        return Mathf.Abs(localPosition.x) <= zoneWidth * 0.5f &&
+               Mathf.Abs(localPosition.z) <= zoneHeight * 0.5f;
+    }
+
+    public void ReturnFloorGroup(
+        GameObject floorGroup,
+        float duration = 0.3f)
+    {
+        if (floorGroup == null)
+            return;
+
+        if (!floorGroupInstances.Contains(floorGroup))
+            floorGroupInstances.Add(floorGroup);
+
+        StartCoroutine(UpdateFloorPositions(duration));
+    }
+
+    public void RemoveFloorGroupFromLayout(
+        GameObject floorGroup,
+        float duration = 0.3f)
+    {
+        if (floorGroup == null)
+            return;
+
+        if (floorGroupInstances.Remove(floorGroup))
+            StartCoroutine(UpdateFloorPositions(duration));
     }
 
     public IEnumerator UpdateFloorPositions(float duration)
