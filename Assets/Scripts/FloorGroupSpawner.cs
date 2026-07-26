@@ -10,6 +10,7 @@ public class FloorGroupSpawner : MonoBehaviour
     [SerializeField] private List<FloorGroupInfo> floorGroupInfos;
     
     private List<GameObject> floorGroupInstances = new();
+    private List<GameObject> allFloorGroupInstances = new();
 
     [Header("Layout")]
     // Floor 本身的尺寸
@@ -53,7 +54,28 @@ public class FloorGroupSpawner : MonoBehaviour
         floorGroupController.SetSpawner(this);
         floorGroupController.GenerateGroup(beatInfo, columnCount);
 
-        floorGroupInstances.Add(floorGroup);
+        if (!floorGroupInstances.Contains(floorGroup))
+            floorGroupInstances.Add(floorGroup);
+        StartCoroutine(UpdateFloorPositions(duration));
+    }
+
+    public void RegisterFloorGroup(GameObject floorGroup)
+    {
+        if (floorGroup != null &&
+            !allFloorGroupInstances.Contains(floorGroup))
+        {
+            allFloorGroupInstances.Add(floorGroup);
+        }
+    }
+
+    public void ResetFloorGroups(float duration = 0.3f)
+    {
+        allFloorGroupInstances.RemoveAll(
+            floorGroup => floorGroup == null
+        );
+
+        floorGroupInstances.Clear();
+        floorGroupInstances.AddRange(allFloorGroupInstances);
         StartCoroutine(UpdateFloorPositions(duration));
     }
 
@@ -159,6 +181,7 @@ public class FloorGroupSpawner : MonoBehaviour
                 transform.rotation *
                 Quaternion.Euler(floorEuler);
 
+            floor.transform.DOKill();
             floor.transform.DOMove(
                 targetPosition,
                 duration

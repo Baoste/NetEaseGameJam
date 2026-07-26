@@ -25,6 +25,8 @@ public class FloorGroup : MonoBehaviour
     public void SetSpawner(FloorGroupSpawner spawner)
     {
         ownerSpawner = spawner;
+        if (ownerSpawner != null)
+            ownerSpawner.RegisterFloorGroup(gameObject);
     }
 
     public bool IsInsideSpawnerZone()

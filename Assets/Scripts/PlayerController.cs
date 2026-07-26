@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     private readonly Dictionary<FloorController, int> visitCounts = new();
     private bool hasRecordedCurrentFloor;
 
+    public bool canMove { get; private set; }
+
     private static readonly Vector3[] SearchDirections =
     {
         Vector3.forward,
@@ -23,17 +25,42 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
     {
         originPosition = transform.position;
         BeatSystem.beatUpdateObjects[0] = this;
+        canMove = false;
     }
 
     public void BeatReset()
     {
-        transform.position = originPosition;
+        transform.position = originPosition + Vector3.up * 3f;
+        transform.DOMoveY(originPosition.y, 0.3f)
+            .SetEase(Ease.InCubic);
         visitCounts.Clear();
         hasRecordedCurrentFloor = false;
+        canMove = false;
     }
 
-    public void OnBeatUpdate()
+    private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            FloorGroupSpawner[] spawners =
+                FindObjectsOfType<FloorGroupSpawner>();
+            foreach (FloorGroupSpawner spawner in spawners)
+                spawner.ResetFloorGroups();
+
+            SingleSceneManager.Instance.PlayerBeFound(transform.position);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            BeatSystem.ResetBeat();
+            canMove = true;
+        }
+    }
+
+public void OnBeatUpdate()
+    {
+        if (!canMove) return;
+
         FloorController[] floors =
             FindObjectsOfType<FloorController>();
 
@@ -51,6 +78,29 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
         FloorController bestFloor = null;
         int lowestVisitCount = int.MaxValue;
+
+        foreach (Vector3 direction in SearchDirections)
+        {
+            Vector3 targetPosition =
+                transform.position + direction * cellSize;
+
+            FloorController targetFloor =
+                FindFloorAt(floors, targetPosition, cellSize);
+
+            if (targetFloor != null &&
+                targetFloor.GetNextBeatInfo() == '-')
+            {
+                transform.DOMove(new Vector3(
+                    targetFloor.transform.position.x,
+                    transform.position.y,
+                    targetFloor.transform.position.z
+                ), 0.3f)
+                .SetEase(Ease.OutCubic);
+
+                SingleSceneManager.Instance.PlayerReachEnd();
+                return;
+            }
+        }
 
         foreach (Vector3 direction in SearchDirections)
         {
