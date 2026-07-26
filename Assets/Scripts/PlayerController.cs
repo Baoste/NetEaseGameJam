@@ -96,6 +96,7 @@ public void OnBeatUpdate()
             if (targetFloor != null &&
                 targetFloor.GetNextBeatInfo() == '-')
             {
+                FaceDirection(direction);
                 transform.DOMove(new Vector3(
                     targetFloor.transform.position.x,
                     transform.position.y,
@@ -133,11 +134,13 @@ public void OnBeatUpdate()
         if (bestFloor != null)
         {
             RecordVisit(bestFloor);
-            lastMoveDirection = (
+            lastMoveDirection =
                 bestFloor.transform.position -
-                transform.position
-            ).normalized;
+                transform.position;
+            lastMoveDirection.y = 0f;
+            lastMoveDirection.Normalize();
 
+            FaceDirection(lastMoveDirection);
             transform.DOMove(new Vector3(
                 bestFloor.transform.position.x,
                 transform.position.y,
@@ -150,6 +153,20 @@ public void OnBeatUpdate()
 
         // 被发现
         SingleSceneManager.Instance.PlayerBeFound(transform.position);
+    }
+
+    private void FaceDirection(Vector3 direction)
+    {
+        Vector3 flatDirection =
+            new Vector3(direction.x, 0f, direction.z).normalized;
+
+        if (flatDirection.sqrMagnitude < 0.01f)
+            return;
+
+        transform.DORotateQuaternion(
+            Quaternion.LookRotation(flatDirection, Vector3.up),
+            0.2f
+        ).SetEase(Ease.OutCubic);
     }
 
     private Vector3[] GetRelativeSearchDirections()
