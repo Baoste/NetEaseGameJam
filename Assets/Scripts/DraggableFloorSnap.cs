@@ -126,7 +126,7 @@ public class DraggableFloorSnap : MonoBehaviour
 
     private void Update()
     {
-        if (!isDragging || !Input.GetKeyDown(KeyCode.Q))
+        if (!isDragging || !Input.GetKeyDown(KeyCode.R))
             return;
 
         RotateGroupClockwise();

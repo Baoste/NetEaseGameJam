@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour, IBeatUpdate
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && canMove)
+        if (Input.GetKeyDown(KeyCode.O) && canMove)
         {
             FloorGroupSpawner[] spawners =
                 FindObjectsOfType<FloorGroupSpawner>();
