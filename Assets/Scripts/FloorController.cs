@@ -13,6 +13,9 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     private Renderer rend;
     private MaterialPropertyBlock propBlock;
 
+    public Transform PeopleShadowTransform =>
+        peopleShadow != null ? peopleShadow.transform : null;
+
     private int sortIndex;
     public const int SORTLAYER = 1000;
 
@@ -40,9 +43,13 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     public void BeatReset()
     {
         currentBeatIndex = 0;
-        char currentBeatChar = beatInfo[currentBeatIndex];
-        char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
-        SetFloorStatus(currentBeatChar, currentBeatChar);
+        if (peopleShadow != null)
+        {
+            peopleShadow.SetActive(false);
+        }
+        //char currentBeatChar = beatInfo[currentBeatIndex];
+        //char nextBeatChar = beatInfo[(currentBeatIndex + 1) % beatInfo.Length];
+        //SetFloorStatus(currentBeatChar, currentBeatChar);
     }
 
     public void OnBeatUpdate()
@@ -69,7 +76,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 if (nextBeatChar == 'x')
                 {
                     peopleShadow.SetActive(false);
-                    peopleShadow.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    peopleShadow.transform.localPosition = new Vector3(0f, -0.74f, 0f);
                     DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
                     {
                         peopleShadow.SetActive(true);
@@ -87,7 +94,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                 else
                 {
                     peopleShadow.SetActive(false);
-                    peopleShadow.transform.localPosition = new Vector3(0f, 0f, 0f);
+                    peopleShadow.transform.localPosition = new Vector3(0f, -0.74f, 0f);
                     rend.GetPropertyBlock(propBlock);
                     propBlock.SetColor("_LightColor", Color.white);
                     propBlock.SetFloat("_LightOn", 1f);
@@ -113,7 +120,7 @@ public class FloorController : MonoBehaviour, IBeatUpdate
                     DOVirtual.DelayedCall(0.9f * BeatSystem.beatTime, () =>
                     {
                         peopleShadow.transform
-                            .DOLocalMoveY(0f, 0.1f * BeatSystem.beatTime)
+                            .DOLocalMoveY(-0.74f, 0.1f * BeatSystem.beatTime)
                             .SetEase(Ease.InCubic);
                     });
                     rend.GetPropertyBlock(propBlock);
@@ -148,11 +155,11 @@ public class FloorController : MonoBehaviour, IBeatUpdate
     {
         peopleShadow.transform
             .DOLocalRotate(
-                new Vector3(0f, 0f, 8f),
-                0.25f,
+                new Vector3(0f, 0f, 12f),
+                0.5f,
                 RotateMode.LocalAxisAdd
             )
-            .SetLoops(4, LoopType.Yoyo)
+            .SetLoops(2, LoopType.Yoyo)
             .SetEase(Ease.InOutSine);
     }
 }

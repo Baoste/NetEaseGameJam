@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using UnityEngine;
 
@@ -6,8 +7,9 @@ public class SingleSceneManager : MonoBehaviour
     public static SingleSceneManager Instance { get; private set; }
 
     [SerializeField] private GlitchController glitchController;
+    private CinemachineImpulseSource impulseSource;
 
-    [Header("Spot Light")]
+    [Header("GameObject")]
     [SerializeField] private GameObject spotLight;
 
     private void Awake()
@@ -22,6 +24,7 @@ public class SingleSceneManager : MonoBehaviour
         Instance = this;
         if (glitchController == null)
             glitchController = FindAnyObjectByType<GlitchController>();
+        impulseSource = GetComponent<CinemachineImpulseSource>();
 
         if (spotLight != null)
         {
@@ -38,17 +41,41 @@ public class SingleSceneManager : MonoBehaviour
         }
     }
 
-
-    public void PlayerReachEnd()
+    public void CameraShake(
+        float force = 0.2f,
+        float duration = 0.2f,
+        CinemachineImpulseDefinition.ImpulseShapes shape = CinemachineImpulseDefinition.ImpulseShapes.Bump)
     {
-        BeatSystem.beatTime = 10000f;
-        StartCoroutine(playerReachEndCoroutin());
+        impulseSource.m_ImpulseDefinition.m_ImpulseShape = shape;
+        impulseSource.m_ImpulseDefinition.m_ImpulseDuration = duration;
+
+        impulseSource.GenerateImpulseWithForce(force);
     }
 
-    private IEnumerator playerReachEndCoroutin()
+    public void PlayerReachEnd(FloorController fc)
     {
+        BeatSystem.beatTime = 10000f;
+        StartCoroutine(playerReachEndCoroutin(fc));
+    }
+
+    private IEnumerator playerReachEndCoroutin(FloorController fc)
+    {
+        CinemachineVirtualCamera virtualCamera = fc.GetComponentInChildren<CinemachineVirtualCamera>();
+        virtualCamera.Priority = 99;
+        yield return new WaitForSeconds(2f);
+
+        // targetFloor boomb
+        CameraShake(1.2f, 0.4f, CinemachineImpulseDefinition.ImpulseShapes.Explosion);
+        MeshDestroy[] meshes = fc.GetComponentsInChildren<MeshDestroy>();
+        foreach (MeshDestroy m in meshes)
+        {
+            m.DestroyMesh(3);
+            yield return null;
+        }
+
+
         yield return new WaitForSeconds(1f);
-        glitchController.TriggerGlitch(0.8f, 0.8f);
+        // glitchController.TriggerGlitch(0.8f, 0.8f);
     }
 
 
@@ -66,6 +93,7 @@ public class SingleSceneManager : MonoBehaviour
             yield break;
         }
 
+        CameraShake();
         spotLight.transform.position = new Vector3(
             playerPosition.x,
             8f,

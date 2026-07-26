@@ -1,3 +1,4 @@
+using Cinemachine;
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,21 +97,14 @@ public void OnBeatUpdate()
                 targetFloor.GetNextBeatInfo() == '-')
             {
                 FaceDirection(direction);
-                transform.DOMove(new Vector3(
-                    targetFloor.transform.position.x,
-                    transform.position.y,
-                    targetFloor.transform.position.z
-                ), 0.3f)
-                .SetEase(Ease.OutCubic);
-
-                // targetFloor boomb
-                MeshDestroy[] meshes = targetFloor.GetComponentsInChildren<MeshDestroy>();
-                foreach (MeshDestroy m in meshes)
-                {
-                    m.DestroyMesh(3);
-                }
-
-                SingleSceneManager.Instance.PlayerReachEnd();
+                //transform.DOMove(new Vector3(
+                //    targetFloor.transform.position.x,
+                //    transform.position.y,
+                //    targetFloor.transform.position.z
+                //), 0.3f)
+                //.SetEase(Ease.OutCubic);
+                playerAnimator.SetTrigger("Expo");
+                SingleSceneManager.Instance.PlayerReachEnd(targetFloor);
                 return;
             }
         }

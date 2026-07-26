@@ -330,11 +330,32 @@ public class DraggableFloorSnap : MonoBehaviour
             ? floorGroup.FirstFloor
             : DragTarget;
 
+        FloorController[] floors =
+            DragTarget.GetComponentsInChildren<FloorController>(true);
+        Quaternion[] shadowWorldRotations =
+            new Quaternion[floors.Length];
+
+        for (int i = 0; i < floors.Length; i++)
+        {
+            Transform peopleShadow =
+                floors[i].PeopleShadowTransform;
+            if (peopleShadow != null)
+                shadowWorldRotations[i] = peopleShadow.rotation;
+        }
+
         DragTarget.RotateAround(
             pivot.position,
             Vector3.up,
             90f
         );
+
+        for (int i = 0; i < floors.Length; i++)
+        {
+            Transform peopleShadow =
+                floors[i].PeopleShadowTransform;
+            if (peopleShadow != null)
+                peopleShadow.rotation = shadowWorldRotations[i];
+        }
 
         if (TryGetMousePositionOnPlane(out Vector3 mouseWorldPosition))
         {
