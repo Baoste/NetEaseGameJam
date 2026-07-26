@@ -20,6 +20,8 @@ public class SingleSceneManager : MonoBehaviour
         }
 
         Instance = this;
+        if (glitchController == null)
+            glitchController = FindAnyObjectByType<GlitchController>();
 
         if (spotLight != null)
         {
